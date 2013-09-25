@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  birth_name: MyString
+  gender: 1
+  dob: 2013-09-23
+  dod: 2013-09-23
+  parents: 
+  children: 
+  spouses: 
+
+two:
+  birth_name: MyString
+  gender: 1
+  dob: 2013-09-23
+  dod: 2013-09-23
+  parents: 
+  children: 
+  spouses: 
