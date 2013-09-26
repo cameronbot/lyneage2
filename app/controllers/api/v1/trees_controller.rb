@@ -1,10 +1,8 @@
 module Api
 	module V1
 		class TreesController < ApiController
-			#before_filter :authenticate_user!
-		
+				
 		  # GET /trees
-		  # GET /trees.json
 		  def index
 		  	if current_user.is_admin?
 		    	@trees = Tree.all
@@ -16,19 +14,17 @@ module Api
 		  end
 
 		  # GET /trees/:id
-		  # GET /trees/:id.json
 		  def show
 		  	if current_user.is_admin?
-		  		@tree = Tree.find(params[:id])
+		  		@tree = Tree.includes(:people).find(params[:id])
 		  	else
-		    	@tree = current_user.trees.find(params[:id])
+		    	@tree = current_user.trees.includes(:people).find(params[:id])
 				end
 		    
 		    render json: { tree: @tree }, status: :ok
 		  end
 
 		  # POST /trees
-		  # POST /trees.json
 		  def create
 		  	@tree = current_user.trees.build(params[:tree])
 
@@ -40,7 +36,6 @@ module Api
 		  end
 
 		  # PUT /trees/:id
-		  # PUT /trees/:id.json
 		  def update
 		    @tree = current_user.trees.find(params[:id])
 
@@ -55,8 +50,7 @@ module Api
 	      end
 		  end
 
-		  # DELETE /pages/:id
-		  # DELETE /pages/:id.json
+		  # DELETE /trees/:id
 		  def destroy
 		  	tree = current_user.trees.find(params[:id])
 		    

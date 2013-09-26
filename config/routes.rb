@@ -3,9 +3,9 @@ Lyneage2::Application.routes.draw do
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
       devise_for :users, controllers: { sessions: 'api/v1/sessions' }
-      resources :pages
-      resources :trees, shallow: true do
-        resources :people, shallow: false do
+      #resources :pages
+      resources :trees do
+        resources :people do
           #post '/parents', to: 'people#create'
           resources :parents, only: ['create','update','destroy']
           resources :children, only: ['create','update','destroy']
