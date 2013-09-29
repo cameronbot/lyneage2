@@ -1,7 +1,7 @@
 module Api
 	module V1
 		class TreesController < ApiController
-				
+
 		  # GET /trees
 		  def index
 		  	if current_user.is_admin?
@@ -16,12 +16,12 @@ module Api
 		  # GET /trees/:id
 		  def show
 		  	if current_user.is_admin?
-		  		@tree = Tree.includes(:people).find(params[:id])
+		  		@tree = Tree.find(params[:id])
 		  	else
-		    	@tree = current_user.trees.includes(:people).find(params[:id])
+		    	@tree = current_user.trees.find(params[:id])
 				end
 		    
-		    render json: { tree: @tree }, status: :ok
+		    render json: { tree: @tree, people: @tree.people }, status: :ok
 		  end
 
 		  # POST /trees

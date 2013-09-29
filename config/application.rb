@@ -67,5 +67,12 @@ module Lyneage2
 
     # devise: forcing your application to not access the DB or load models when precompiling your assets.
     config.assets.initialize_on_precompile = false
+
+    config.middleware.insert_before Warden::Manager, Rack::Cors do
+      allow do
+        origins 'localhost:3000', 'localhost:9000', 'localhost:9001'
+        resource '*', :headers => :any, :methods => [:get, :post, :options]
+      end
+    end
   end
 end
