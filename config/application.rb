@@ -71,7 +71,7 @@ module Lyneage2
     config.middleware.insert_before Warden::Manager, Rack::Cors do
       allow do
         origins 'localhost:3000', 'localhost:9000', 'localhost:9001'
-        resource '*', :headers => :any, :methods => [:get, :post, :options]
+        resource '*', :headers => :any, :methods => [:get, :post, :put, :delete, :options]
       end
     end
   end
