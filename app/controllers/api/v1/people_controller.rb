@@ -71,25 +71,59 @@ module Api
 		  end
 
 		  # PUT /trees/:tree_id/people/:id
-		  # only modified person data, not relationships
+		  # only modified person data
 		  def update
 		    @tree = current_user.trees.find(params[:tree_id])
 
-	      unless @tree.nil?
-	      	@person = @tree.people.find(params[:id])
-
-	      	if @person.nil?
-	      		render json: { errors: ["No such person found"], success: false }, status: :bad_request
-	      	end
-
-	      	if @person.update_attributes(params[:person])
-	        	render json: { person: @person }, status: :accepted
-	      	else
-	        	render json: { errors: @person.errors, success: false }, status: :unprocessable_entity
-	      	end
-	      else
+	      if @tree.nil?
 	      	render json: { errors: ["No such tree found"], success: false }, status: :bad_request
 	      end
+
+	      @person = @tree.people.find(params[:id])
+
+      	if @person.nil?
+      		render json: { errors: ["No such person found"], success: false }, status: :bad_request
+      	end
+
+      	params.delete :_id
+
+	      relations = {}
+		  	modified_people = []
+
+		  	if params[:person][:spouses]
+		  		relations[:spouses] = params[:person][:spouses]
+		  		params[:person].delete :spouses
+		  	end
+
+		  	if params[:person][:children]
+		  		relations[:children] = params[:person][:children]
+		  		params[:person].delete :children
+		  	end
+
+		  	if params[:person][:parents]
+		  		relations[:parents] = params[:person][:parents]
+		  		params[:person].delete :parents
+		  	end
+
+      	if @person.update_attributes(params[:person])
+      		modified_people << @person
+
+      		relations.each do |k,v|
+		    		v.each do |p|
+		    			puts "RELATIONS", relations
+		    			puts "HERE", k, v, p
+		    			relative = @tree.people.find(p)
+		    			puts "THERE", relative[k], relative.to_json
+		    			relative.send(k) << @person
+		    			relative.save
+		    			modified_people << relative
+		    		end
+		    	end
+
+        	render json: { person: @person, people: modified_people }, status: :accepted
+      	else
+        	render json: { errors: @person.errors, success: false }, status: :unprocessable_entity
+      	end
 		  end
 
 		  # DELETE /trees/:tree_id/people/:id
