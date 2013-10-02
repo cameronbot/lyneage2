@@ -59,11 +59,14 @@ module Api
 		    			puts "HERE", k, v, p
 		    			relative = @tree.people.find(p)
 		    			puts "THERE", relative[k], relative.to_json
-		    			relative.send(k) << @person
-		    			relative.save
+		    			#relative.send(k) << @person
+		    			#relative.save
+		    			@person.send(k) << relative
 		    			modified_people << relative
 		    		end
 		    	end
+		    	@person.save
+
 	        render json: { tree: @tree, people: modified_people }, status: :created
 	      else
 	        render json: @tree.errors, status: :unprocessable_entity
@@ -138,7 +141,15 @@ module Api
 		 			if person.nil?
 		 				render json: { errors: ["No such person found"], success: false }, status: :bad_request
 		 			else
-		    		respond_with person.destroy
+		 				modified_people = []
+		 				modified_people << person.parents
+		 				modified_people << person.children
+		 				modified_people << person.spouses
+		 				modified_people.flatten.map { |person| person._id }
+		    		person.destroy
+		    		
+		    		# respond_with person.destroy
+		    		render json: { person: person, people: tree.people.find(modified_people).to_a }, status: :accepted
 		    	end
 		    end
 		  end
