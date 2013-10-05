@@ -16,7 +16,7 @@ module Api
 
 		  def destroy
 		    # expire auth token
-		    user = User.where(:authentication_token => params[:authentication_token]).first
+		    user = User.where(:authentication_token => params[:auth_token]).first
 		    user.reset_authentication_token!
 		    render :json => { :message => ["Session deleted."] }, :success => true, :status => :ok
 		  end
