@@ -6,4 +6,5 @@ class Tree
   
   field :name, type: String
   field :description, type: String
+  field :person_count, type: Integer
 end
