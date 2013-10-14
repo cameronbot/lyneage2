@@ -4,6 +4,7 @@ gem 'rails', '3.2.12'
 gem 'mongoid'
 gem 'devise'
 gem 'rack-cors'
+gem 'mongoid_geospatial'
 
 group :development, :test do
 	gem 'rspec'

@@ -1,5 +1,7 @@
 class Person
   include Mongoid::Document
+  include Mongoid::Geospatial
+
   field :birth_name, type: String
   field :gender, type: Integer
 
@@ -11,6 +13,11 @@ class Person
   field :dod_d, type: Integer
 
   field :living, type: Boolean
+
+  field :birth_loc, type: String
+  geo_field :birth_coords
+  field :death_loc, type: String
+  geo_field :death_coords
 
   field :notes, type: String
   field :sources, type: String
